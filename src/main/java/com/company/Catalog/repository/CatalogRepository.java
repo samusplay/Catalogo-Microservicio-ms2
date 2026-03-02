@@ -1,13 +1,11 @@
 package com.company.Catalog.repository;
 
-import com.company.Catalog.entity.Catalog;
+import com.company.Catalog.entity.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 
-public interface CatalogRepository extends JpaRepository <Catalog,Long> {
+public interface CatalogRepository extends JpaRepository <Producto,Long> {
 
 }
