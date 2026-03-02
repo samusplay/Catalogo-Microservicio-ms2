@@ -6,5 +6,5 @@ import lombok.Data;
 //Datos que pasamos al frontend o enviamos
 public class CatalogPruebaDTO {
     private Long id;
-    private String nombre;
+    private String name;
 }
