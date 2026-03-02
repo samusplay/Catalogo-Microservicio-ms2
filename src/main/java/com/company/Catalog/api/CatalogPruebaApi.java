@@ -12,4 +12,18 @@ public interface CatalogPruebaApi {
 
     @GetMapping("/{id}")
     ResponseEntity<CatalogPruebaDTO>findTest(@PathVariable Long id);
+
+
+    // 🔹 DESCONTAR STOCK
+    @PutMapping("/{id}/descontar/{cantidad}")
+    ResponseEntity<CatalogPruebaDTO> descontarStock(
+            @PathVariable Long id,
+            @PathVariable Integer cantidad);
+
+    // 🔹 REPONER STOCK
+    @PutMapping("/{id}/reponer/{cantidad}")
+    ResponseEntity<CatalogPruebaDTO> reponerStock(
+            @PathVariable Long id,
+            @PathVariable Integer cantidad);
 }
+

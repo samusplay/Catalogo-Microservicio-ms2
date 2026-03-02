@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @AllArgsConstructor
@@ -23,8 +24,25 @@ public class CatalogPruebaApiController implements CatalogPruebaApi {
     }
 
     @Override
-    public ResponseEntity<CatalogPruebaDTO> findTest(Long id) {
-        CatalogPruebaDTO finded=catalogPruebaService.findById(id);
-        return  ResponseEntity.ok(finded);
+    public ResponseEntity<CatalogPruebaDTO> findTest(@PathVariable Long id) {
+
+        CatalogPruebaDTO finded = catalogPruebaService.findById(id);
+
+        return ResponseEntity.ok(finded);
+    }
+    @Override
+    public ResponseEntity<CatalogPruebaDTO> descontarStock(Long id, Integer cantidad) {
+        CatalogPruebaDTO actualizado =
+                catalogPruebaService.descontarStock(id, cantidad);
+
+        return ResponseEntity.ok(actualizado);
+    }
+
+    @Override
+    public ResponseEntity<CatalogPruebaDTO> reponerStock(Long id, Integer cantidad) {
+        CatalogPruebaDTO actualizado =
+                catalogPruebaService.reponerStock(id, cantidad);
+
+        return ResponseEntity.ok(actualizado);
     }
 }
