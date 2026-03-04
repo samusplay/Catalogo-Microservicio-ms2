@@ -4,9 +4,24 @@ import com.company.Catalog.models.ActualizarProductoRequest;
 import com.company.Catalog.models.CrearProductoRequest;
 import com.company.Catalog.models.ProductoResponse;
 
+import java.util.List;
+
 public interface CatalogService {
 
     ProductoResponse create (CrearProductoRequest dto);
 
-    ProductoResponse update (ActualizarProductoRequest dto);
+    ProductoResponse update(Long id, ActualizarProductoRequest dto);
+
+    // Obtener todos los productos
+    List<ProductoResponse> findAll();
+
+    // Obtener producto por ID
+    ProductoResponse findById(Long id);
+
+    // Eliminar producto
+    void delete(Long id);
+
+
+
+
 }

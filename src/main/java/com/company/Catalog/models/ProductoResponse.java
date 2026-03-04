@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class ProductoResponse {
 
-    private Long Id;
+    private Long id;
     private String name;
     private Double precio;
     private Integer Stock;

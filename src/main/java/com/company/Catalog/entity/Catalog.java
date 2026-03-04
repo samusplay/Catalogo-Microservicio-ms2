@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 @Table(name = "catalog")
 @Entity
-public class Producto {
+public class Catalog {
 
     @Id
     @Column(name="Id_producto")
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Significa que la base de datos hace auto-increment
-    private Long Id;
+    private Long id;
 
     @Column(name="nombre_producto")
     private String name;

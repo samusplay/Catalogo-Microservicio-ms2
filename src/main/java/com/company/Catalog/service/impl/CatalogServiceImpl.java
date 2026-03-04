@@ -1,6 +1,7 @@
 package com.company.Catalog.service.impl;
 
-import com.company.Catalog.entity.Producto;
+import com.company.Catalog.entity.Catalog;
+import com.company.Catalog.exceptions.ProductNotFoundException;
 import com.company.Catalog.models.ActualizarProductoRequest;
 import com.company.Catalog.models.CrearProductoRequest;
 import com.company.Catalog.models.ProductoResponse;
@@ -8,6 +9,8 @@ import com.company.Catalog.repository.CatalogRepository;
 import com.company.Catalog.service.CatalogService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -18,12 +21,12 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     public ProductoResponse create(CrearProductoRequest dto) {
 
-        Producto producto = new Producto();
+        Catalog producto = new Catalog();
         producto.setName(dto.getName());
         producto.setPrecio(dto.getPrecio());
         producto.setStock(dto.getStock());
 
-        Producto guardado = repository.save(producto);
+        Catalog guardado = repository.save(producto);
 
         return new ProductoResponse(
                 guardado.getId(),
@@ -34,21 +37,17 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public ProductoResponse update(ActualizarProductoRequest dto) {
+    public ProductoResponse update(Long id, ActualizarProductoRequest dto) {
 
-        //  Buscar producto, si no existe se señala
-        Producto producto = repository.findById(dto.getId())
+        Catalog producto = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        // Actualizar campos
         producto.setName(dto.getName());
         producto.setPrecio(dto.getPrecio());
         producto.setStock(dto.getStock());
 
-        // Guardar cambios
-        Producto actualizado = repository.save(producto);
+        Catalog actualizado = repository.save(producto);
 
-        // Convertir a Response
         return new ProductoResponse(
                 actualizado.getId(),
                 actualizado.getName(),
@@ -56,6 +55,45 @@ public class CatalogServiceImpl implements CatalogService {
                 actualizado.getStock()
         );
     }
+
+    //Para Ver Todos los productos
+    @Override
+    public List<ProductoResponse> findAll() {
+
+        return repository.findAll()
+                .stream()
+                .map(producto -> new ProductoResponse(
+                        producto.getId(),
+                        producto.getName(),
+                        producto.getPrecio(),
+                        producto.getStock()
+                ))
+                .toList();
+    }
+
+    // Para ver algún objeto en específico
+    @Override
+    public ProductoResponse findById(Long id) {
+
+        Catalog producto = repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        return new ProductoResponse(
+                producto.getId(),
+                producto.getName(),
+                producto.getPrecio(),
+                producto.getStock()
+        );
+    }
+    // Para eliminar un producto
+    public void delete(Long id) {
+
+        Catalog producto = repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        repository.delete(producto);
+    }
+
 
 
 }
