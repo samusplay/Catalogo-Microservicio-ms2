@@ -8,7 +8,6 @@ public interface CatalogPruebaService {
     CatalogPruebaDTO create(CatalogPruebaDTO dto);
     CatalogPruebaDTO findById(Long id);
 
-    CatalogPruebaDTO descontarStock(Long id, Integer cantidad);
 
-    CatalogPruebaDTO reponerStock(Long id, Integer cantidad);
+
 }

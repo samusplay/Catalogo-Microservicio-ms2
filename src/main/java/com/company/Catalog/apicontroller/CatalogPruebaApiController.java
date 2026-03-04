@@ -30,19 +30,5 @@ public class CatalogPruebaApiController implements CatalogPruebaApi {
 
         return ResponseEntity.ok(finded);
     }
-    @Override
-    public ResponseEntity<CatalogPruebaDTO> descontarStock(Long id, Integer cantidad) {
-        CatalogPruebaDTO actualizado =
-                catalogPruebaService.descontarStock(id, cantidad);
 
-        return ResponseEntity.ok(actualizado);
-    }
-
-    @Override
-    public ResponseEntity<CatalogPruebaDTO> reponerStock(Long id, Integer cantidad) {
-        CatalogPruebaDTO actualizado =
-                catalogPruebaService.reponerStock(id, cantidad);
-
-        return ResponseEntity.ok(actualizado);
-    }
 }
