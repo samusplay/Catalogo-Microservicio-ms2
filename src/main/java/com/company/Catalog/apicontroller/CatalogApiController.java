@@ -6,12 +6,23 @@ import com.company.Catalog.service.CatalogService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
+@RequestMapping("/catalogo")
 @AllArgsConstructor
 public class CatalogApiController implements CatalogApi {
     //inyetcar servicio
     private final CatalogService catalogService;
+
+
+    @Override
+    public ResponseEntity<CatalogPruebaDTO> create(CatalogPruebaDTO dto) {
+
+        CatalogPruebaDTO response = catalogService.create(dto);
+        return ResponseEntity.ok(response);
+    }
+
     @Override
     public ResponseEntity<CatalogPruebaDTO> descontarStock(Long id, Integer cantidad) {
 
@@ -29,5 +40,6 @@ public class CatalogApiController implements CatalogApi {
         CatalogPruebaDTO response = catalogService.reponerStock(id, cantidad);
         return ResponseEntity.ok(response);
     }
+
 
 }

@@ -1,5 +1,8 @@
 package com.company.Catalog.service.impl;
 
+import com.company.Catalog.exceptions.NotFoundId;
+import com.company.Catalog.exceptions.StockInsuficienteException;
+
 import com.company.Catalog.entity.CatalogPrueba;
 import com.company.Catalog.models.CatalogPruebaDTO;
 import com.company.Catalog.repository.CatalogPruebaRepository;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+
 
 @Service
 @AllArgsConstructor
@@ -34,7 +39,7 @@ public class CatalogoServiceImpl implements CatalogService {
     public CatalogPruebaDTO update(Long id, CatalogPruebaDTO dto) {
 
         CatalogPrueba entity = catalogPruebaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontró el catálogo con ID: " + id));
+                .orElseThrow(() -> new NotFoundId("No se encontró el catálogo con ID: " + id));
 
         entity.setNombre(dto.getNombre());
         entity.setStock(dto.getStock());
@@ -47,7 +52,7 @@ public class CatalogoServiceImpl implements CatalogService {
     public void delete(Long id) {
 
         CatalogPrueba entity = catalogPruebaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontró el catálogo con ID: " + id));
+                .orElseThrow(() -> new NotFoundId("No se encontró el catálogo con ID: " + id));
 
         catalogPruebaRepository.delete(entity);
     }
@@ -57,7 +62,7 @@ public class CatalogoServiceImpl implements CatalogService {
     public CatalogPruebaDTO findById(Long id) {
 
         CatalogPrueba entity = catalogPruebaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontró el catálogo con ID: " + id));
+                .orElseThrow(() -> new NotFoundId("No se encontró el catálogo con ID: " + id));
 
         return mapToDTO(entity);
     }
@@ -77,10 +82,14 @@ public class CatalogoServiceImpl implements CatalogService {
     public CatalogPruebaDTO descontarStock(Long id, Integer cantidad) {
 
         CatalogPrueba entity = catalogPruebaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontró el catálogo con ID: " + id));
+                .orElseThrow(() -> new NotFoundId("No se encontró el catálogo con ID: " + id));
+
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
+        }
 
         if (entity.getStock() < cantidad) {
-            throw new RuntimeException("Stock insuficiente");
+            throw new StockInsuficienteException("Stock insuficiente para el producto: " + entity.getNombre());
         }
 
         entity.setStock(entity.getStock() - cantidad);
@@ -93,7 +102,11 @@ public class CatalogoServiceImpl implements CatalogService {
     public CatalogPruebaDTO reponerStock(Long id, Integer cantidad) {
 
         CatalogPrueba entity = catalogPruebaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontró el catálogo con ID: " + id));
+                .orElseThrow(() -> new NotFoundId("No se encontró el catálogo con ID: " + id));
+
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
+        }
 
         entity.setStock(entity.getStock() + cantidad);
 
@@ -110,4 +123,6 @@ public class CatalogoServiceImpl implements CatalogService {
 
         return dto;
     }
+
+
 }
