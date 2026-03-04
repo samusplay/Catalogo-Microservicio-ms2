@@ -43,50 +43,5 @@ public class CatalogPruebaServiceImpl implements CatalogPruebaService {
         dto.setNombre(entity.getNombre());
         return dto;
     }
-    @Override
-    public CatalogPruebaDTO descontarStock(Long id, Integer cantidad) {
 
-        if (cantidad <= 0) {
-            throw new RuntimeException("Cantidad inválida");
-        }
-
-        CatalogPrueba entity = catalogPruebaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-        if (entity.getStock() < cantidad) {
-            throw new RuntimeException("Stock insuficiente");
-        }
-
-        entity.setStock(entity.getStock() - cantidad);
-
-        CatalogPrueba actualizado = catalogPruebaRepository.save(entity);
-
-        CatalogPruebaDTO dto = new CatalogPruebaDTO();
-        dto.setId(actualizado.getId());
-        dto.setNombre(actualizado.getNombre());
-        dto.setStock(actualizado.getStock());
-
-        return dto;
-    }
-    @Override
-    public CatalogPruebaDTO reponerStock(Long id, Integer cantidad) {
-
-        if (cantidad <= 0) {
-            throw new RuntimeException("Cantidad inválida");
-        }
-
-        CatalogPrueba entity = catalogPruebaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-        entity.setStock(entity.getStock() + cantidad);
-
-        CatalogPrueba actualizado = catalogPruebaRepository.save(entity);
-
-        CatalogPruebaDTO dto = new CatalogPruebaDTO();
-        dto.setId(actualizado.getId());
-        dto.setNombre(actualizado.getNombre());
-        dto.setStock(actualizado.getStock());
-
-        return dto;
-    }
 }

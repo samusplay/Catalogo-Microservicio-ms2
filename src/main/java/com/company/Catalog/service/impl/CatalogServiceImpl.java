@@ -1,8 +1,12 @@
 package com.company.Catalog.service.impl;
 
 import com.company.Catalog.entity.Catalog;
+import com.company.Catalog.entity.CatalogPrueba;
+import com.company.Catalog.exceptions.NotFoundId;
 import com.company.Catalog.exceptions.ProductNotFoundException;
+import com.company.Catalog.exceptions.StockInsuficienteException;
 import com.company.Catalog.models.ActualizarProductoRequest;
+import com.company.Catalog.models.CatalogPruebaDTO;
 import com.company.Catalog.models.CrearProductoRequest;
 import com.company.Catalog.models.ProductoResponse;
 import com.company.Catalog.repository.CatalogRepository;
@@ -92,6 +96,53 @@ public class CatalogServiceImpl implements CatalogService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
         repository.delete(producto);
+    }
+
+    //Descontar Stock
+    @Override
+    public ProductoResponse descontarStock(Long id, Integer cantidad) {
+
+        Catalog entity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundId("No se encontró el catálogo con ID: " + id));
+
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
+        }
+
+        if (entity.getStock() < cantidad) {
+            throw new StockInsuficienteException("Stock insuficiente para el producto: " + entity.getName());
+        }
+
+        entity.setStock(entity.getStock() - cantidad);
+
+        return mapToDTO(repository.save(entity));
+    }
+
+    // REPONER STOCK
+    @Override
+    public ProductoResponse reponerStock(Long id, Integer cantidad) {
+
+        Catalog entity = repository.findById(id)
+                .orElseThrow(() -> new NotFoundId("No se encontró el catálogo con ID: " + id));
+
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
+        }
+
+        entity.setStock(entity.getStock() + cantidad);
+
+        return mapToDTO(repository.save(entity));
+    }
+
+    //  MÉTODO PRIVADO PARA CONVERTIR
+    private ProductoResponse mapToDTO(Catalog entity) {
+
+        return new ProductoResponse(
+                entity.getId(),
+                entity.getName(),
+                entity.getPrecio(),
+                entity.getStock()
+        );
     }
 
 

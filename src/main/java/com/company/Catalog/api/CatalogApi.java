@@ -30,4 +30,8 @@ public interface CatalogApi {
     @DeleteMapping("/{id}")
     ResponseEntity<Void> eliminar(
             @PathVariable Long id);
+
+
+    ResponseEntity<ProductoResponse> descontarStock(Long id, Integer cantidad);
+    ResponseEntity<ProductoResponse> reponerStock(Long id, Integer cantidad);
 }

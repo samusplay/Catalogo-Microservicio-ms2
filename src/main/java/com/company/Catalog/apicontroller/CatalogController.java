@@ -2,6 +2,7 @@ package com.company.Catalog.apicontroller;
 
 import com.company.Catalog.api.CatalogApi;
 import com.company.Catalog.models.ActualizarProductoRequest;
+import com.company.Catalog.models.CatalogPruebaDTO;
 import com.company.Catalog.models.CrearProductoRequest;
 import com.company.Catalog.models.ProductoResponse;
 import com.company.Catalog.service.CatalogService;
@@ -55,4 +56,23 @@ public class CatalogController implements CatalogApi {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Override
+    public ResponseEntity<ProductoResponse> descontarStock(Long id, Integer cantidad) {
+
+
+        //devolver servicio
+        ProductoResponse response = service.descontarStock(id, cantidad);
+        return ResponseEntity.ok(response);
+
+    }
+
+    @Override
+    public ResponseEntity<ProductoResponse> reponerStock(Long id, Integer cantidad) {
+
+
+        ProductoResponse response = service.reponerStock(id, cantidad);
+        return ResponseEntity.ok(response);
+    }
+
 }
