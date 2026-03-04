@@ -2,7 +2,7 @@ package com.company.Catalog.apicontroller;
 
 import com.company.Catalog.api.CatalogApi;
 import com.company.Catalog.models.ActualizarProductoRequest;
-import com.company.Catalog.models.CatalogPruebaDTO;
+
 import com.company.Catalog.models.CrearProductoRequest;
 import com.company.Catalog.models.ProductoResponse;
 import com.company.Catalog.service.CatalogService;
@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/productos")
 @AllArgsConstructor
@@ -58,21 +59,15 @@ public class CatalogController implements CatalogApi {
     }
 
     @Override
-    public ResponseEntity<ProductoResponse> descontarStock(Long id, Integer cantidad) {
-
-
-        //devolver servicio
-        ProductoResponse response = service.descontarStock(id, cantidad);
-        return ResponseEntity.ok(response);
-
+    public ResponseEntity<ProductoResponse> descontarStock(Long id, Map<String, Integer> request) {
+        Integer cantidad = request.get("cantidad");
+        return ResponseEntity.ok(service.descontarStock(id, cantidad));
     }
 
     @Override
-    public ResponseEntity<ProductoResponse> reponerStock(Long id, Integer cantidad) {
-
-
-        ProductoResponse response = service.reponerStock(id, cantidad);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ProductoResponse> reponerStock(Long id, Map<String, Integer> request) {
+        Integer cantidad = request.get("cantidad");
+        return ResponseEntity.ok(service.reponerStock(id, cantidad));
     }
 
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/productos")
 public interface CatalogApi {
@@ -31,7 +32,13 @@ public interface CatalogApi {
     ResponseEntity<Void> eliminar(
             @PathVariable Long id);
 
+    @PutMapping("/{id}/descontar")
+    ResponseEntity<ProductoResponse> descontarStock(
+            @PathVariable Long id,
+            @RequestBody Map<String, Integer> request);
 
-    ResponseEntity<ProductoResponse> descontarStock(Long id, Integer cantidad);
-    ResponseEntity<ProductoResponse> reponerStock(Long id, Integer cantidad);
+    @PutMapping("/{id}/reponer")
+    ResponseEntity<ProductoResponse> reponerStock(
+            @PathVariable Long id,
+            @RequestBody Map<String, Integer> request);
 }
