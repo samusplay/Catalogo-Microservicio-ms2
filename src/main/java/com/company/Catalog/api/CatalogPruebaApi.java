@@ -14,7 +14,6 @@ public interface CatalogPruebaApi {
     ResponseEntity<CatalogPruebaDTO>findTest(@PathVariable Long id);
 
 
-    // 🔹 DESCONTAR STOCK
 
 
 

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/productos")
+//@RequestMapping("/productos")
 @AllArgsConstructor
 public class CatalogController implements CatalogApi {
 

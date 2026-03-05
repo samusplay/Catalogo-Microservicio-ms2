@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@RequestMapping("/productos")
+//@RequestMapping("/productos")
 public interface CatalogApi {
 
-    @PostMapping
+    @PostMapping("/crear")
     ResponseEntity<ProductoResponse> crear(
             @RequestBody CrearProductoRequest request);
 
@@ -21,7 +21,7 @@ public interface CatalogApi {
             @PathVariable Long id,
             @RequestBody ActualizarProductoRequest request);
 
-    @GetMapping
+    @GetMapping("/all")
     ResponseEntity<List<ProductoResponse>> listar();
 
     @GetMapping("/{id}")
