@@ -1,6 +1,5 @@
 package com.company.Catalog.exceptions;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler extends RuntimeException {
-
+public class GlobalExceptionHandler {
+//Producto que no existe en la base de datos por ID
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNotFound(ProductNotFoundException ex) {
 
@@ -25,29 +24,19 @@ public class GlobalExceptionHandler extends RuntimeException {
 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
+// Error con Id /ID/...
+    @ExceptionHandler(NotFoundId.class)
+    public ResponseEntity<Map<String, Object>> handleNotFoundId(NotFoundId ex) {
 
         Map<String, Object> error = new HashMap<>();
         error.put("timestamp", LocalDateTime.now());
-        error.put("status", 500);
-        error.put("error", "Internal Server Error");
-        error.put("message", "Ocurrió un error inesperado");
+        error.put("status", 404);
+        error.put("error", "Not Found");
+        error.put("message", ex.getMessage());
 
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, Object> error = new HashMap<>();
-        error.put("status", 400);
-        error.put("error", "Bad Request");
-        error.put("message", "Datos inválidos");
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
+// stock insuficiente
     @ExceptionHandler(StockInsuficienteException.class)
     public ResponseEntity<Map<String, Object>> handleStock(StockInsuficienteException ex) {
 
@@ -59,9 +48,21 @@ public class GlobalExceptionHandler extends RuntimeException {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
+// datos invalidos
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
 
+        Map<String, Object> error = new HashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", 400);
+        error.put("error", "Bad Request");
+        error.put("message", "Datos inválidos");
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+// valor negativo ej
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, Object>> handleIllegal(IllegalArgumentException ex) {
+    public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex){
 
         Map<String, Object> error = new HashMap<>();
         error.put("timestamp", LocalDateTime.now());
@@ -69,17 +70,18 @@ public class GlobalExceptionHandler extends RuntimeException {
         error.put("error", "Bad Request");
         error.put("message", ex.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        return ResponseEntity.badRequest().body(error);
     }
-    @ExceptionHandler(NotFoundId.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(NotFoundId ex) {
+// error general error controlado
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
 
         Map<String, Object> error = new HashMap<>();
         error.put("timestamp", LocalDateTime.now());
-        error.put("status", 404);
-        error.put("error", "Not Found");
-        error.put("message", ex.getMessage());
+        error.put("status", 400);
+        error.put("error", "Bad Request");
+        error.put("message", "Ocurrió un error en la solicitud ");
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-}
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+}

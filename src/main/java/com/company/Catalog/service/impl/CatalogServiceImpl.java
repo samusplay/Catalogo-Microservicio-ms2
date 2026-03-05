@@ -105,6 +105,10 @@ public class CatalogServiceImpl implements CatalogService {
         Catalog entity = repository.findById(id)
                 .orElseThrow(() -> new NotFoundId("No se encontró el catálogo con ID: " + id));
 
+        if (cantidad == null) {
+            throw new IllegalArgumentException("Debe enviar la cantidad");
+        }
+
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
         }
@@ -124,6 +128,10 @@ public class CatalogServiceImpl implements CatalogService {
 
         Catalog entity = repository.findById(id)
                 .orElseThrow(() -> new NotFoundId("No se encontró el catálogo con ID: " + id));
+
+        if (cantidad == null) {
+            throw new IllegalArgumentException("Debe enviar la cantidad");
+        }
 
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
