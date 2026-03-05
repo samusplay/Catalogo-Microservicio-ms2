@@ -1,9 +1,6 @@
 package com.company.Catalog.service;
 
-import com.company.Catalog.models.ActualizarProductoRequest;
-import com.company.Catalog.models.CatalogPruebaDTO;
-import com.company.Catalog.models.CrearProductoRequest;
-import com.company.Catalog.models.ProductoResponse;
+import com.company.Catalog.models.*;
 
 import java.util.List;
 
@@ -22,9 +19,13 @@ public interface CatalogService {
     // Eliminar producto
     void delete(Long id);
 
+    //descontar
     ProductoResponse descontarStock(Long id, Integer cantidad);
-
+     //reponer
     ProductoResponse reponerStock(Long id, Integer cantidad);
+
+    //validar
+    Boolean checkStock(StockCheckRequest request, String correlationId);
 
 
 

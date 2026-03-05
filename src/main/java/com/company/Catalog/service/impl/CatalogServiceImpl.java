@@ -5,19 +5,20 @@ import com.company.Catalog.entity.CatalogPrueba;
 import com.company.Catalog.exceptions.NotFoundId;
 import com.company.Catalog.exceptions.ProductNotFoundException;
 import com.company.Catalog.exceptions.StockInsuficienteException;
-import com.company.Catalog.models.ActualizarProductoRequest;
-import com.company.Catalog.models.CatalogPruebaDTO;
-import com.company.Catalog.models.CrearProductoRequest;
-import com.company.Catalog.models.ProductoResponse;
+import com.company.Catalog.models.*;
 import com.company.Catalog.repository.CatalogRepository;
 import com.company.Catalog.service.CatalogService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CatalogServiceImpl implements CatalogService {
 
     private final CatalogRepository repository;
@@ -140,6 +141,35 @@ public class CatalogServiceImpl implements CatalogService {
         entity.setStock(entity.getStock() + cantidad);
 
         return mapToDTO(repository.save(entity));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean checkStock(StockCheckRequest request, String correlationId) {
+        //buscar si existe le producto
+        Optional<Catalog>productOpt=repository.findById(request.getProductId());
+
+        if(productOpt.isEmpty()){
+            log.warn("Producto no encontrado |CorrelationId:{}",correlationId);
+            return false;
+        }
+        //comparamos cnatidades
+        Catalog product=productOpt.get();
+        //valida si el stock es insuficiente
+        boolean hasEnoughStock=product.getStock() >=request.getQuantity();
+
+        //rastreo peticion
+        if(hasEnoughStock){
+            log.info("Stock aprobado (Actual: {}, Solicitado: {})|CorrelationId: {}",
+                    product.getStock(),request.getQuantity(),correlationId);
+
+        }else{
+            log.warn("Stock insuficiente (Actual: {}, Solicitado: {}) | CorrelationId: {}",
+                    product.getStock(), request.getQuantity(), correlationId);
+        }
+        return hasEnoughStock;
+
+
     }
 
     //  MÉTODO PRIVADO PARA CONVERTIR
