@@ -14,4 +14,7 @@ public class CatalogPrueba {
     private Long id;
 
     private String nombre;
+
+    @Column(nullable = false)
+    private Integer stock = 0; // evita que sea negativo desde base de datos
 }

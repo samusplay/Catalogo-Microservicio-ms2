@@ -12,4 +12,10 @@ public interface CatalogPruebaApi {
 
     @GetMapping("/{id}")
     ResponseEntity<CatalogPruebaDTO>findTest(@PathVariable Long id);
+
+
+
+
+
 }
+

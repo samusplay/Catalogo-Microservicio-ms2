@@ -20,11 +20,17 @@ public class CatalogPruebaServiceImpl implements CatalogPruebaService {
         //seteamos
         entity.setNombre(dto.getNombre());
 
+        entity.setStock(dto.getStock());// guardar stock
+
         //guardamos en el repo
         CatalogPrueba guardado = catalogPruebaRepository.save(entity);
 
-        dto.setId(guardado.getId());
-        return dto;
+        CatalogPruebaDTO response = new CatalogPruebaDTO();
+        response.setId(guardado.getId());
+        response.setNombre(guardado.getNombre());
+        response.setStock(guardado.getStock());
+
+        return response;
     }
 
     @Override
@@ -37,4 +43,5 @@ public class CatalogPruebaServiceImpl implements CatalogPruebaService {
         dto.setNombre(entity.getNombre());
         return dto;
     }
+
 }

@@ -7,4 +7,7 @@ public interface CatalogPruebaService {
     //Servicio para crear
     CatalogPruebaDTO create(CatalogPruebaDTO dto);
     CatalogPruebaDTO findById(Long id);
+
+
+
 }
