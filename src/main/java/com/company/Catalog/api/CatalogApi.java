@@ -16,7 +16,7 @@ public interface CatalogApi {
     ResponseEntity<ProductoResponse> crear(
             @RequestBody CrearProductoRequest request);
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/update")
     ResponseEntity<ProductoResponse> actualizar(
             @PathVariable Long id,
             @RequestBody ActualizarProductoRequest request);
@@ -24,11 +24,11 @@ public interface CatalogApi {
     @GetMapping("/all")
     ResponseEntity<List<ProductoResponse>> listar();
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/getById")
     ResponseEntity<ProductoResponse> obtenerPorId(
             @PathVariable Long id);
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     ResponseEntity<Void> eliminar(
             @PathVariable Long id);
 
