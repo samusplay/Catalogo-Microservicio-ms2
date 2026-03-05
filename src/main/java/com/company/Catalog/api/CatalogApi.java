@@ -3,6 +3,7 @@ package com.company.Catalog.api;
 import com.company.Catalog.models.ActualizarProductoRequest;
 import com.company.Catalog.models.CrearProductoRequest;
 import com.company.Catalog.models.ProductoResponse;
+import com.company.Catalog.models.StockCheckRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,4 +42,11 @@ public interface CatalogApi {
     ResponseEntity<ProductoResponse> reponerStock(
             @PathVariable Long id,
             @RequestBody Map<String, Integer> request);
+
+    //endpoint verificar Stock
+    @PostMapping("/check-stock")
+    ResponseEntity<Boolean>checkStock(
+            @RequestBody StockCheckRequest request,
+            @RequestHeader ("X-Correlation-Id") String correlationId
+            );
 }

@@ -5,6 +5,7 @@ import com.company.Catalog.models.ActualizarProductoRequest;
 
 import com.company.Catalog.models.CrearProductoRequest;
 import com.company.Catalog.models.ProductoResponse;
+import com.company.Catalog.models.StockCheckRequest;
 import com.company.Catalog.service.CatalogService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -68,6 +69,14 @@ public class CatalogController implements CatalogApi {
     public ResponseEntity<ProductoResponse> reponerStock(Long id, Map<String, Integer> request) {
         Integer cantidad = request.get("cantidad");
         return ResponseEntity.ok(service.reponerStock(id, cantidad));
+    }
+
+    @Override
+    public ResponseEntity<Boolean> checkStock(StockCheckRequest request, String correlationId) {
+        //llamos a la logica
+        Boolean hasStock=service.checkStock(request,correlationId);
+
+        return ResponseEntity.ok(hasStock);
     }
 
 }
