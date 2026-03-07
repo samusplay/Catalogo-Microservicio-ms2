@@ -1,5 +1,6 @@
 package com.company.Catalog.service;
 
+import com.company.Catalog.events.OrderCreatedEvent;
 import com.company.Catalog.models.*;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public interface CatalogService {
 
     //validar
     Boolean checkStock(StockCheckRequest request, String correlationId);
+
+    void processOrderCreated(OrderCreatedEvent event);
 
 
 

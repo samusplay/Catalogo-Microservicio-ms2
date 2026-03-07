@@ -2,11 +2,14 @@ package com.company.Catalog.service.impl;
 
 import com.company.Catalog.entity.Catalog;
 import com.company.Catalog.entity.CatalogPrueba;
+import com.company.Catalog.entity.ProcessedEvent;
+import com.company.Catalog.events.OrderCreatedEvent;
 import com.company.Catalog.exceptions.NotFoundId;
 import com.company.Catalog.exceptions.ProductNotFoundException;
 import com.company.Catalog.exceptions.StockInsuficienteException;
 import com.company.Catalog.models.*;
 import com.company.Catalog.repository.CatalogRepository;
+import com.company.Catalog.repository.ProcessedEventRepository;
 import com.company.Catalog.service.CatalogService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,7 @@ import java.util.Optional;
 public class CatalogServiceImpl implements CatalogService {
 
     private final CatalogRepository repository;
+    private final ProcessedEventRepository processedEventRepository;
 
     @Override
     public ProductoResponse create(CrearProductoRequest dto) {
@@ -170,6 +174,36 @@ public class CatalogServiceImpl implements CatalogService {
         return hasEnoughStock;
 
 
+    }
+
+    @Override
+    @Transactional
+    public void processOrderCreated(OrderCreatedEvent event) {
+        String eventId = event.getEventId();
+
+        // se guarda el log en la consola de sping para verificar que se recibió el evento correctamente.
+        log.info("Recibido evento de orden creada: {} para el producto: {}", eventId, event.getProductId());
+
+        //Verificación de Idempotencia
+        if (processedEventRepository.existsByEventId(eventId)) {
+            log.warn("Evento duplicado detectado. Omitiendo procesamiento para eventId: {}", eventId);
+            return;
+        }
+
+        try {
+            // (Descontar Stock)
+            this.descontarStock(event.getProductId(), event.getQuantity());
+
+            ProcessedEvent processedEvent = new ProcessedEvent();
+            processedEvent.setEventId(eventId);
+            processedEventRepository.save(processedEvent);
+
+            log.info("Stock actualizado y evento registrado exitosamente para eventId: {}", eventId);
+
+        } catch (Exception e) {
+            log.error("Error al procesar el evento {}: {}", eventId, e.getMessage());
+            throw e;
+        }
     }
 
     //  MÉTODO PRIVADO PARA CONVERTIR

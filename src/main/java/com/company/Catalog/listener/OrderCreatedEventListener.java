@@ -1,19 +1,26 @@
 package com.company.Catalog.listener;
 
+import com.company.Catalog.config.RabbitMQConfig;
+import com.company.Catalog.events.OrderCreatedEvent;
+import com.company.Catalog.service.CatalogService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OrderCreatedEventListener {
-    //inyectar logica de negocio  ose CatalogService
+    private final CatalogService catalogService;
 
-    //utilizar @Rabbitlistener
-    //crear metodo que va recibir la solicitud
-    //dicho metodo luego de recibir el evento debe pasarle la responsabilidad al servicio
-    //// Asegúrate de importar tu clase OrderCreatedEvent
-    //void processOrderCreated(OrderCreatedEvent event);
+    // metodo de escucha de los mensajes en cola.
+    @RabbitListener(queues = RabbitMQConfig.ORDER_CREATED_QUEUE)
+    public void listener(OrderCreatedEvent event) {
+        log.info("Mensaje recibido desde RabbitMQ para el evento: {}", event.getEventId());
 
-    //luego crear en CatalogService el metodo para llamar el metodo y pasar impl con criterios de aceptacion
+        // descontar stock e idempotencia
+        catalogService.processOrderCreated(event);
+    }
 
 }
