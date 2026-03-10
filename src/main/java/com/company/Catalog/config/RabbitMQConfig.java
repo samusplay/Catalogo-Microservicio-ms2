@@ -21,6 +21,10 @@ public class RabbitMQConfig {
     public static final String ORDER_CREATED_QUEUE  = "order.created.queue";
     public static final String ORDER_CREATED_ROUTING_KEY = "order.created.v1";
 
+    // Cancelacion
+    public static final String ORDER_CANCELLED_QUEUE = "order.cancelled.queue";
+    public static final String ORDER_CANCELLED_ROUTING_KEY = "order.cancelled.v1";
+
     // exchange
     @Bean
     // decide que cola va el mensaje
@@ -35,6 +39,12 @@ public class RabbitMQConfig {
         return new Queue(ORDER_CREATED_QUEUE);
     }
 
+    // Cola de cancelacion
+    @Bean
+    public Queue orderCancelledQueue(){
+        return new Queue(ORDER_CANCELLED_QUEUE);
+    }
+
     @Bean
     // configuramos el Routing key
     public Binding orderCreatedBinding(Queue orderCreatedQueue,TopicExchange orderExchange){
@@ -42,6 +52,15 @@ public class RabbitMQConfig {
                 .bind(orderCreatedQueue)
                 .to(orderExchange)
                 .with(ORDER_CREATED_ROUTING_KEY);
+    }
+
+    // Binding de cancelacion
+    @Bean
+    public Binding orderCancelledBinding(Queue orderCancelledQueue, TopicExchange orderExchange){
+        return BindingBuilder
+                .bind(orderCancelledQueue)
+                .to(orderExchange)
+                .with(ORDER_CANCELLED_ROUTING_KEY);
     }
 
     @Bean
@@ -59,3 +78,4 @@ public class RabbitMQConfig {
     }
 
 }
+
